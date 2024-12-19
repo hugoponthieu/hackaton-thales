@@ -1,18 +1,15 @@
+use std::collections::HashMap;
 use reqwest::Client;
-use serde_json::json;
 use tokio;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let mut map = HashMap::new();
+    map.insert("content", "rust");
     let client = Client::new();
     let res = client
         .post("https://rust-checker.hackathon.dopolytech.fr/check")
-        .body(
-            json!({
-                "content": "fn main() { println!(\"Hello, world!\"); }",
-            })
-            .to_string(),
-        )
+        .json(&map)
         .send()
         .await?;
     let body = res.text().await?;
